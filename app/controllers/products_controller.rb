@@ -25,9 +25,12 @@ class ProductsController < ApplicationController
   # POST /products.json
   def create
     @product = Product.new(product_params)
+    p @product
 
     respond_to do |format|
       if @product.save
+        p @product.id
+        AuditLog.save_audit_logs(@product.id, Constant::ACTION_INSERT, Constant::DESC_INSERT, Time.now)
         format.html { redirect_to @product, notice: 'Product was successfully created.' }
         format.json { render :show, status: :created, location: @product }
       else
